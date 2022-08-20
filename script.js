@@ -82,7 +82,18 @@ function addTag(event) {
 		arrFi.push($(this).attr('id'));
 	});
 
-	var classToSearch = "";
+	//Filter with or
+
+	for (i = 0; i < arrFi.length; ++i) {
+		$("#jobs-content .job-bloc."+arrFi[i]).each(function( index ) {
+			$(this).fadeIn("slow");
+		});
+	}
+
+	
+	//Filter with and
+
+	/*var classToSearch = "";
 
 	for (i = 0; i < arrFi.length; ++i) {
 		classToSearch += "."+arrFi[i];
@@ -90,7 +101,7 @@ function addTag(event) {
 
 	$("#jobs-content .job-bloc"+classToSearch).each(function( index ) {
 		$(this).fadeIn("slow");
-	});
+	});*/
 
 }
 
@@ -376,7 +387,7 @@ function openInfo(event) {
 
 	$(event.target).find(".middle .desc").css("display", "none");
 
-	$(event.target).parent().find(".bloc-info-all").fadeIn("slow");
+	$(event.target).parent().find(".bloc-info-all").slideDown("slow");
 
 	if ($(event.target).find(".reduce").css("display") == "block") {
 		var salary = $(event.target).find(".right .salary");
@@ -397,7 +408,7 @@ function reduceData(event) {
 
 	$(event.target).parents(".job-bloc").find(".middle .desc").fadeIn("slow");
 
-	$(event.target).parents(".job-bloc").find(".bloc-info-all").css("display", "none");
+	$(event.target).parents(".job-bloc").find(".bloc-info-all").slideUp("slow");
 
 	var salary = $(event.target).parents(".job-bloc").find(".middle .salary");
 	var desti = $(event.target).parents(".job-bloc").find(".right");
