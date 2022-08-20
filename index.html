@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Test technique</title>
+  	<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+	<meta charset="utf-8">
+	<script type="text/javascript" src="script.js"></script>
+	<meta name="author" content="Max Henocq" />
+	<meta name="copyright" content="Ubiquid" />
+	<meta name="description" content="Ceci est un test technique"/>
+	<meta name="keywords" content="Test technique">
+	<meta name="robots" content="index">
+	<meta name="robots" content="noarchive">
+  	<link rel="stylesheet" href="style.css">
+  	
+  	<script src="script.js"></script>
+</head>
+<body>
+	<div id="menu-left">
+
+		<img id="logo" src="logo.png">
+
+		<div id="nav">
+			<div class="nav-bloc"><img src="svg/home.svg">Acceuil</div>
+			<div class="nav-bloc current"><img src="svg/job.svg">Les jobs</div>
+			<div class="nav-bloc"><img src="svg/message.svg">Messages</div>
+		</div>
+
+		<div id="disconect">
+			<img src="svg/logout.svg">
+			<a href="#">Déconnexion</a>
+		</div>
+
+	</div>
+
+	<div id="content">
+
+		<div id="info-user">
+			<div id="content-user-data">
+				<img src="svg/notif.svg">
+				<div id="dropdown-user">
+					Eva Barnett
+				</div>
+			</div>
+			<div id="print-page" onclick="print()">Imprimer la page</div>
+		</div>
+
+		<h1>Les jobs</h1>
+
+		<div id="filter">
+			<div class="dropdown" onclick="openDropDown(event)"><div class="chevron" onclick="openDropDown(event)"></div> Poste</div>
+			<div id="poste-dp" class="dropdown-content"></div>
+			<div class="dropdown" onclick="openDropDown(event)"><div class="chevron" onclick="openDropDown(event)"></div> Contrat</div>
+			<div id="contrat-dp" class="dropdown-content"></div>
+			<div class="dropdown" onclick="openDropDown(event)"><div class="chevron" onclick="openDropDown(event)"></div> Télétravail</div>
+			<div id="tv-dp" class="dropdown-content"></div>
+
+			<div id="sort-by">
+				<div id="sort-content">
+					<p onclick="openSort()">Trier par : <span>Date</span></p><div class="chevron"></div>
+				</div>
+				<div id="dropdown-sort" class="dropdown-light">
+					<p id="sortDate" onclick="sortByDate()">Par date</p>
+					<p id="sortSalary" onclick="sortBySalary()">Par salaire</p>
+				</div>
+			</div>
+		</div>
+
+		<div id="content-tags">
+			
+		</div>
+
+		<div id="jobs-content">
+			
+		</div>
+	</div>
+
+</body>
+</html>
