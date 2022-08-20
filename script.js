@@ -4,6 +4,10 @@ function display() {
 
  function openDropDown(event) {
 
+	if ($("#dropdown-sort:visible").length) {
+		$("#dropdown-sort").fadeOut("slow");
+	}
+
  	$("#filter .dropdown-content").each(function( index ) {
         $(this).fadeOut("slow");
     }); 
@@ -15,9 +19,13 @@ function display() {
  	}
  	
  	$(event.target).toggleClass("chevron-anim");
+	 
  }
 
  function openSort() {
+ 	if ($(".dropdown-content:visible").length) {
+		$(".dropdown-content:visible").fadeOut("slow");
+	}
  	$("#dropdown-sort").toggle();
  	$("#sort-content").toggleClass("chevron-anim");
  }
@@ -28,32 +36,95 @@ function addTag(event) {
       	$(this).fadeOut('slow');
     });
 
-	$( "#content-tags" ).append( "<div class='tag'>"+$(event.target).parent().attr("class")+"<div class='close' onclick='removeTag(event)'></div></div>" );
-	
-	var filter = $(event.target).parent().attr("class");
+    var filter = $(event.target).parent().attr("class");
+
+    var filterCor = "";
+
+	if (filter == "full") {
+  		filterCor = "Télétravail total";
+  	} else if (filter == "eventually") {
+  		filterCor = "Télétravail partiel";
+  	} else if (filter == "regularly") {
+  		filterCor = "Télétravail pontuel";
+  	} else if (filter == "unknown") {
+  		filterCor = ""
+  	} else if (filter == "none") {
+  		filterCor = "Aucun télétravail"
+  	} else if (filter == "cdi") {
+  		filterCor = "CDI";
+  	} else if (filter == "cdd") {
+  		filterCor = "CDD";
+  	} else if (filter == "stage") {
+  		filterCor = "Stage";
+  	} else if (filter == "alternance") {
+  		filterCor = "Alternance";
+  	} else if (filter == "fullstack") {
+  		filterCor = "Dev Fullstack";
+  	} else if (filter == "frontend") {
+  		filterCor = "Dev Frontend";
+  	} else if (filter == "manager") {
+  		filterCor = "Manager";
+  	} else if (filter == "backend") {
+  		filterCor = "Dev Backend";
+  	} else {
+  		filterCor = filter;
+  	}
+
+	$( "#content-tags" ).append( "<div id='"+filter+"' class='tag'>"+filterCor+"<div class='close' onclick='removeTag(event)'></div></div>" );
 
 	$("#jobs-content .job-bloc").each(function( index ) {
 		$(this).fadeOut('slow');
 	});
 
-	$("#jobs-content .job-bloc."+filter+"").fadeIn("slow");
+	var arrFi = [];
+
+	$("#content-tags .tag").each(function( index ) {
+		arrFi.push($(this).attr('id'));
+	});
+
+	var classToSearch = "";
+
+	for (i = 0; i < arrFi.length; ++i) {
+		classToSearch += "."+arrFi[i];
+	}
+
+	$("#jobs-content .job-bloc"+classToSearch).each(function( index ) {
+		$(this).fadeIn("slow");
+	});
 
 }
 
 function removeTag(event) {
 
-	var toUncheck = $(event.target).parent().text();
-	$(event.target).parent().remove();
+	var toUncheck = $(event.target).parent().attr("id");
 
-	$("#jobs-content .job-bloc").each(function( index ) {
-		$("#jobs-content .job-bloc."+toUncheck+"").fadeIn("slow");
-	});
+	$(event.target).parent().remove();
 
 	$("#filter .dropdown-content ul li input").each(function( index ) {
         if ($(this).val() == toUncheck) {
             $(this).prop( "checked", false );
         }
     });
+
+    $("#jobs-content .job-bloc").each(function( index ) {
+		$(this).fadeOut('slow');
+	});
+
+    var arrFi = [];
+
+	$("#content-tags .tag").each(function( index ) {
+		arrFi.push($(this).attr('id'));
+	});
+
+	var classToSearch = "";
+
+	for (i = 0; i < arrFi.length; ++i) {
+		classToSearch += "."+arrFi[i];
+	}
+
+	$("#jobs-content .job-bloc"+classToSearch).each(function( index ) {
+		$(this).fadeIn("slow");
+	});
 
 }
 
@@ -71,6 +142,7 @@ function custom_sort(a, b) {
 }
 
 function sortByDate() {
+
 	$("#sort-content").removeClass("chevron-anim");
 	$("#dropdown-sort").fadeOut("slow");
 	$("#sort-content p span").text("");
@@ -79,6 +151,8 @@ function sortByDate() {
 	$.getJSON( "data.json", function( data ) {
 
 	  var items = [];
+
+	  $("#jobs-content ul").remove();
 	  
 		data.sort((a, b) => {
 		  return new Date(b.publishDate) - new Date(a.publishDate); // descending
@@ -128,6 +202,19 @@ function sortByDate() {
 	  		var tvLabel = val.remoteWork;
 	  	}
 
+	  	if (val.contractType == "cdi") {
+	  		var labelWork = "CDI";
+	  	} else if (val.contractType == "cdd") {
+	  		var labelWork = "CDD";
+	  	} else if (val.contractType == "stage") {
+	  		var labelWork = "Stage";
+	  	}  else if (val.contractType == "alternance") {
+	  		var labelWork = "Alternance";
+	  	} else {
+	  		var labelWork = val.contractType;
+	  	}
+
+	  	var firstLetterCompany = val.company.slice(0,1);
 
 	  	if (val.jobTitle == "fullstack") {
 	  		var titleLabel = "Dev Fullstack";
@@ -141,8 +228,23 @@ function sortByDate() {
 	  		var titleLabel = val.jobTitle;
 	  	}
 
+	  	var dateStart = val.startDate;
 
-	  	items.push( "<li class='job-bloc' id='"+key+"'><div class='content-job'><div class='left'><div class='carre'>T</div></div><div class='middle'><p class='title'>" + titleLabel + "<span class='" + val.remoteWork + "'>" + tvLabel + "</span></p><p class='desc'>" + val.company + " - " + val.city + " ————— " + val.contractType.toUpperCase() + "</p></div><div class='right'><p class='salary'>Salaire <span>" + val.salary + "K</span></p><p class='time'>Il y a "+ compareDate +" jours</p></div></div></li>" );
+	  	var beforeStart = dateStart.substring(0, dateStart.indexOf('T'));
+
+	  	var beforeStartForm1 = beforeStart.substring(0, beforeStart.indexOf('-'));
+
+	  	var beforeStartForm2 = beforeStart.substring(
+		    beforeStart.indexOf("-") + 1, 
+		    beforeStart.lastIndexOf("-")
+		);
+
+	  	var beforeStartForm3 = beforeStart.substr(beforeStart.length - 2);
+	  
+	  	var postDateStart = beforeStartForm3 + ' ' + GetMonthName(beforeStartForm2) + ' ' + beforeStartForm1;
+
+
+	  	items.push( "<li onclick='openInfo(event)' class='job-bloc " + val.jobTitle + " " + val.contractType + " " + val.remoteWork + "' id='"+key+"'><div class='content-job'><div class='left'><div class='carre'>"+firstLetterCompany+"</div></div><div class='middle'><p class='title'>" + titleLabel + "<span class='" + val.remoteWork + "'>" + tvLabel + "</span></p><p class='desc'>" + val.company + " - " + val.city + " ————— " + labelWork + "</p></div><div class='right'><a onclick='reduceData(event)' class='reduce' href='#'>Réduire</a><p class='salary'>Salaire <span>" + val.salary + "K</span></p><p class='time'>Il y a "+ compareDate +" jours</p></div></div>         <div class='bloc-info-all'> <div class='header-info'> <div class='un'>" + val.company + " - " + val.city + "</div> <div class='deux'>" + labelWork + "</div> <div class='trois'>Début le : " + postDateStart + "</div> <div class='quatre'>Bac +"+ val.studyLevel +"</div> <p>Publié il y a " + compareDate + " jours</p> </div> <div class='content-info'><p>" + val.about + "</p></div> <a href='#'>Postuler</a> </di> </li>" );
 
 	  });
 	 
@@ -220,11 +322,13 @@ function sortBySalary() {
 	  		var labelWork = "CDD";
 	  	} else if (val.contractType == "stage") {
 	  		var labelWork = "Stage";
+	  	}  else if (val.contractType == "alternance") {
+	  		var labelWork = "Alternance";
 	  	} else {
 	  		var labelWork = val.contractType;
 	  	}
 
-
+	  	var firstLetterCompany = val.company.slice(0,1);
 
 	  	if (val.jobTitle == "fullstack") {
 	  		var titleLabel = "Dev Fullstack";
@@ -238,7 +342,22 @@ function sortBySalary() {
 	  		var titleLabel = val.jobTitle;
 	  	}
 
-	  	items.push( "<li class='job-bloc' id='"+key+"'><div class='content-job'><div class='left'><div class='carre'>T</div></div><div class='middle'><p class='title'>" + titleLabel + "<span class='" + val.remoteWork + "'>" + tvLabel + "</span></p><p class='desc'>" + val.company + " - " + val.city + " ————— " + labelWork + "</p></div><div class='right'><p class='salary'>Salaire <span>" + val.salary + "K</span></p><p class='time'>Il y a "+ compareDate +" jours</p></div></div></li>" );
+	  	var dateStart = val.startDate;
+
+	  	var beforeStart = dateStart.substring(0, dateStart.indexOf('T'));
+
+	  	var beforeStartForm1 = beforeStart.substring(0, beforeStart.indexOf('-'));
+
+	  	var beforeStartForm2 = beforeStart.substring(
+		    beforeStart.indexOf("-") + 1, 
+		    beforeStart.lastIndexOf("-")
+		);
+
+	  	var beforeStartForm3 = beforeStart.substr(beforeStart.length - 2);
+	  
+	  	var postDateStart = beforeStartForm3 + ' ' + GetMonthName(beforeStartForm2) + ' ' + beforeStartForm1;
+
+	  	items.push( "<li onclick='openInfo(event)' class='job-bloc " + val.jobTitle + " " + val.contractType + " " + val.remoteWork + "' id='"+key+"'><div class='content-job'><div class='left'><div class='carre'>"+firstLetterCompany+"</div></div><div class='middle'><p class='title'>" + titleLabel + "<span class='" + val.remoteWork + "'>" + tvLabel + "</span></p><p class='desc'>" + val.company + " - " + val.city + " ————— " + labelWork + "</p></div><div class='right'><a onclick='reduceData(event)' class='reduce' href='#'>Réduire</a><p class='salary'>Salaire <span>" + val.salary + "K</span></p><p class='time'>Il y a "+ compareDate +" jours</p></div></div>         <div class='bloc-info-all'> <div class='header-info'> <div class='un'>" + val.company + " - " + val.city + "</div> <div class='deux'>" + labelWork + "</div> <div class='trois'>Début le : " + postDateStart + "</div> <div class='quatre'>Bac +"+ val.studyLevel +"</div> <p>Publié il y a " + compareDate + " jours</p> </div> <div class='content-info'><p>" + val.about + "</p></div> <a href='#'>Postuler</a> </di> </li>" );
 
 	  });
 	 
@@ -252,10 +371,10 @@ function sortBySalary() {
 
 function openInfo(event) {
 
-	$(event.target).find(".right .time").fadeOut("fast");
+	$(event.target).find(".right .time").css("display", "none");
 	$(event.target).find(".reduce").fadeIn("slow");
 
-	$(event.target).find(".middle .desc").fadeOut("fast");
+	$(event.target).find(".middle .desc").css("display", "none");
 
 	$(event.target).parent().find(".bloc-info-all").fadeIn("slow");
 
@@ -274,11 +393,11 @@ function openInfo(event) {
 function reduceData(event) {
 
 	$(event.target).parents(".job-bloc").find(".right .time").fadeIn("slow");
-	$(event.target).parents(".job-bloc").find(".reduce").fadeOut("fast");
+	$(event.target).parents(".job-bloc").find(".reduce").css("display", "none");
 
 	$(event.target).parents(".job-bloc").find(".middle .desc").fadeIn("slow");
 
-	$(event.target).parents(".job-bloc").find(".bloc-info-all").fadeOut("fast");
+	$(event.target).parents(".job-bloc").find(".bloc-info-all").css("display", "none");
 
 	var salary = $(event.target).parents(".job-bloc").find(".middle .salary");
 	var desti = $(event.target).parents(".job-bloc").find(".right");
@@ -309,7 +428,9 @@ $(document).ready(function() {
 		  		var labelWork = "CDD";
 		  	} else if (val.contractType == "stage") {
 		  		var labelWork = "Stage";
-		  	} else {
+		  	}  else if (val.contractType == "alternance") {
+	  			var labelWork = "Alternance";
+	  		} else {
 		  		var labelWork = val.contractType;
 		  	}
 
@@ -443,6 +564,8 @@ $(document).ready(function() {
 	  		var labelWork = "CDD";
 	  	} else if (val.contractType == "stage") {
 	  		var labelWork = "Stage";
+	  	} else if (val.contractType == "alternance") {
+	  		var labelWork = "Alternance";
 	  	} else {
 	  		var labelWork = val.contractType;
 	  	}
@@ -458,6 +581,8 @@ $(document).ready(function() {
 	  	} else {
 	  		var titleLabel = val.jobTitle;
 	  	}
+
+	  	var firstLetterCompany = val.company.slice(0,1);
 
 
 	  	var dateStart = val.startDate;
@@ -475,7 +600,7 @@ $(document).ready(function() {
 	  
 	  	var postDateStart = beforeStartForm3 + ' ' + GetMonthName(beforeStartForm2) + ' ' + beforeStartForm1;
 
-	  	items.push( "<li onclick='openInfo(event)' class='job-bloc " + val.jobTitle + "' id='"+key+"'><div class='content-job'><div class='left'><div class='carre'>T</div></div><div class='middle'><p class='title'>" + titleLabel + "<span class='" + val.remoteWork + "'>" + tvLabel + "</span></p><p class='desc'>" + val.company + " - " + val.city + " ————— " + labelWork + "</p></div><div class='right'><a onclick='reduceData(event)' class='reduce' href='#'>Réduire</a><p class='salary'>Salaire <span>" + val.salary + "K</span></p><p class='time'>Il y a "+ compareDate +" jours</p></div></div>         <div class='bloc-info-all'> <div class='header-info'> <div class='un'>" + val.company + " - " + val.city + "</div> <div class='deux'>" + labelWork + "</div> <div class='trois'>Début le : " + postDateStart + "</div> <div class='quatre'>Bac +"+ val.studyLevel +"</div> <p>Publié il y a " + compareDate + " jours</p> </div> <div class='content-info'><p>" + val.about + "</p></div> <a href='#'>Postuler</a> </di> </li>" );
+	  	items.push( "<li onclick='openInfo(event)' class='job-bloc " + val.jobTitle + " " + val.contractType + " " + val.remoteWork + "' id='"+key+"'><div class='content-job'><div class='left'><div class='carre'>"+firstLetterCompany+"</div></div><div class='middle'><p class='title'>" + titleLabel + "<span class='" + val.remoteWork + "'>" + tvLabel + "</span></p><p class='desc'>" + val.company + " - " + val.city + " ————— " + labelWork + "</p></div><div class='right'><a onclick='reduceData(event)' class='reduce' href='#'>Réduire</a><p class='salary'>Salaire <span>" + val.salary + "K</span></p><p class='time'>Il y a "+ compareDate +" jours</p></div></div>         <div class='bloc-info-all'> <div class='header-info'> <div class='un'>" + val.company + " - " + val.city + "</div> <div class='deux'>" + labelWork + "</div> <div class='trois'>Début le : " + postDateStart + "</div> <div class='quatre'>Bac +"+ val.studyLevel +"</div> <p>Publié il y a " + compareDate + " jours</p> </div> <div class='content-info'><p>" + val.about + "</p></div> <a href='#'>Postuler</a> </di> </li>" );
 
 	  });
 	 

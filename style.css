@@ -14,6 +14,7 @@ body {
 }
 
 #menu-left {
+	min-width: 240px;
 	height:100%;
 	width:16.67%;
 	background-color:#7650e0;
@@ -153,10 +154,11 @@ body {
 
 #filter {
 	display: flex;
-	margin-top: 40px;
+	margin-top: 24px;
 	position: relative;
-	height: 35px;
+	min-height: 35px;
 	width: 100%;
+	flex-wrap: wrap;
 }
 
 #filter .dropdown {
@@ -172,6 +174,7 @@ body {
 	font-size: 18px;
 	position: relative;
 	cursor: pointer;
+	margin-top: 16px;
 }
 
 #filter .dropdown:hover {
@@ -187,6 +190,7 @@ body {
 	top: 10px;
 	text-align: center;
 	border-radius: 50%;
+	pointer-events: none;
 }
 
 #filter .dropdown.chevron-anim .chevron {
@@ -229,6 +233,7 @@ body {
 
 #content-tags .tag .close:before {
 	content: 'x';
+	font-size: 15px;
 }
 
 .chevron::before {
@@ -277,7 +282,7 @@ body {
 	background-color: white;
 	min-width: 130px;
 	position: absolute;
-	top: 50px;
+	top: 60px;
 	z-index: 9;
 }
 
@@ -290,9 +295,9 @@ body {
 }
 
 #sort-by {
-	position: absolute;
-	right: 10px;
+	margin-left: auto;
 	z-index: 9;
+	margin-top: 14px;
 }
 
 #dropdown-sort p {
@@ -314,6 +319,8 @@ body {
 	background-color: white;
 	border-radius: 12px;
 	box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+	position: absolute;
+	width: 110px;
 }
 
 #sort-by .chevron::before {
@@ -367,11 +374,12 @@ body {
 
 #jobs-content .job-bloc .bloc-info-all {
 	width: 100%;
-	margin-top: 16px;
+	margin-top: 25px;
 	position: relative;
 	color: #505053;
 	padding-bottom: 50px;
 	display: none;
+	font-size: 18px;
 }
 
 #jobs-content .job-bloc .bloc-info-all a {
@@ -384,13 +392,15 @@ body {
 #jobs-content .job-bloc .bloc-info-all .header-info {
 	display: flex;
 	position: relative;
+	flex-wrap: wrap;
 }
 
 #jobs-content .job-bloc .bloc-info-all .header-info p {
-	position: absolute;
-	right: 0;
-	top: 0;
-	margin: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-top: auto;
+	margin-left: auto;
+
 }
 
 #jobs-content .job-bloc .bloc-info-all .header-info div {
@@ -398,8 +408,8 @@ body {
 	background-repeat: no-repeat;
 	background-position: center left;
 	background-size: contain;
-	padding-left: 24px;
-	height: 22px;
+	padding-left: 28px;
+	height: 23px;
 	line-height: 25px;
 }
 
@@ -431,10 +441,11 @@ body {
 #jobs-content .job-bloc .content-job {
 	display: flex;
 	position: relative;
+	flex-wrap: wrap;
 }
 
 #jobs-content .job-bloc .content-job .left {
-
+	pointer-events: none;
 }
 
 #jobs-content .job-bloc .content-job .left .carre {
@@ -451,15 +462,20 @@ body {
 
 #jobs-content .job-bloc .content-job .middle .desc {
 	color: #505053;
+	margin-top: 15px;
 	font-size:18px;
 }
 
 #jobs-content .job-bloc .content-job .middle {
 	margin-left: 15px;
+	height: 76px;
+	pointer-events: none;
 }
 
 #jobs-content .job-bloc .content-job .middle .title {
 	font-size:18px;
+	margin-top: 11px;
+	margin-bottom: 0px;
 }
 
 #jobs-content .job-bloc .content-job .middle .title span {
@@ -534,6 +550,10 @@ body {
 	line-height: 12px;
 	text-align: center;
 	font-size: 22px;
+}
+
+#jobs-content .job-bloc .content-job .middle .salary {
+	margin-top: 10px;
 }
 
 #jobs-content .job-bloc .content-job .right .salary, #jobs-content .job-bloc .content-job .middle .salary {
