@@ -159,6 +159,10 @@ function sortByDate() {
 	$("#sort-content p span").text("");
 	$("#sort-content p span").text("Date");
 
+	$("#jobs-content .job-bloc").each(function( index ) {
+		$(this).fadeIn('slow');
+	});
+
 	$.getJSON( "data.json", function( data ) {
 
 	  var items = [];
@@ -272,6 +276,10 @@ function sortBySalary() {
 	$("#dropdown-sort").fadeOut("slow");
 	$("#sort-content p span").text("");
 	$("#sort-content p span").text("Salaire");
+
+	$("#jobs-content .job-bloc").each(function( index ) {
+		$(this).fadeIn('slow');
+	});
 
 	$.getJSON( "data.json", function( data ) {
 
